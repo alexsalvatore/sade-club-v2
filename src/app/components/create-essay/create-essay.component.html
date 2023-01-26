@@ -1,0 +1,24 @@
+<div class="p-2">
+    <input [type]="'text'" class="form-control form-control-lg" [(ngModel)]="essay.title" placeholder="Title"
+        (ngModelChange)="onChange($event)" />
+</div>
+
+<div class="p-2">
+    <div *ngIf="essay.coverImage != '' "> <img [src]="essay.coverImage" height="220px" /></div>
+    Upload a cover: <input type="file" accept="image/png, image/jpeg, image/webp" (change)="onCoverSelected($event)" />
+</div>
+
+<div class="p-2">
+    <textarea class="form-control" class="form-control form-control-lg" [(ngModel)]="essay.text"
+        placeholder="Your text here..." (ngModelChange)="onChange($event)" [rows]="getRows()" cols="75">
+    </textarea>
+</div>
+
+<div class="p-2">
+    <input [type]="'text'" class="form-control form-control-lg" [(ngModel)]="encryptionKey"
+        placeholder="Key of encryption" (ngModelChange)="onChange($event)" />
+</div>
+
+<div class="p-2">
+    <button (click)="onPublish()">Publish</button>
+</div>
