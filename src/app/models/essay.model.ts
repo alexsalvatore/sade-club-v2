@@ -1,4 +1,4 @@
-import { AES } from 'crypto-js';
+import { AES, enc } from 'crypto-js';
 import * as sha256 from 'crypto-js/sha256';
 
 
@@ -55,18 +55,20 @@ export class EssayClear extends EssayHeader {
 
 export class EssayDark extends EssayHeader {
 
+    hash: string = "";
     cypherData: string = "";
 
     constructor(data?: any) {
         super(data);
         this.cypherData = data?.cypherData ? data.cypherData : "";
+        this.hash = sha256(JSON.stringify(this)).toString();
     }
 
     decrypt(key: string): EssayClear {
 
         // Decrypt
-        const bytes = CryptoJS.AES.decrypt(this.cypherData, key);
-        const stringifiedJSON = bytes.toString(CryptoJS.enc.Utf8);
+        const bytes = AES.decrypt(this.cypherData, key);
+        const stringifiedJSON = bytes.toString(enc.Utf8);
         return new EssayClear({ ...this, ...JSON.parse(stringifiedJSON) });
     }
 

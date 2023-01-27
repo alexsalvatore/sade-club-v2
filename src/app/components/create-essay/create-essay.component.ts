@@ -3,6 +3,7 @@ import { EssayClear, EssayDark } from 'src/app/models/essay.model';
 import { nanoid } from "nanoid";
 import { blurPicture } from 'src/app/utils/images';
 import { ListEssaysService } from 'src/app/services/list-essays.service';
+import { DbService } from 'src/app/services/db.service';
 
 @Component({
   selector: 'app-create-essay',
@@ -14,7 +15,7 @@ export class CreateEssayComponent implements OnInit {
   essay: EssayClear = new EssayClear();
   encryptionKey: string = nanoid(64);
 
-  constructor(private listEssayService: ListEssaysService) { }
+  constructor(private listEssayService: ListEssaysService, private db: DbService) { }
 
   ngOnInit(): void { }
 
@@ -45,6 +46,9 @@ export class CreateEssayComponent implements OnInit {
   onEncrypt() {
     const essayDark: EssayDark = this.essay.encrypt(this.encryptionKey);
     this.listEssayService.addEssay(essayDark);
+    this.db.addEssayDark(essayDark);
+    this.db.getAllEssays();
+    this.essay = new EssayClear();
   }
 
 }

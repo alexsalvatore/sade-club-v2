@@ -6,12 +6,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CreateEssayComponent } from './components/create-essay/create-essay.component';
 import { ListEssaysComponent } from './components/list-essays/list-essays.component';
+import { EssayItemComponent } from './components/essay-item/essay-item.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     CreateEssayComponent,
-    ListEssaysComponent
+    ListEssaysComponent,
+    EssayItemComponent
   ],
   imports: [
     BrowserModule,
