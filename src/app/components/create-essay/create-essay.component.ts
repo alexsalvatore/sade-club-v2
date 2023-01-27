@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Essay } from 'src/app/models/essay.model';
+import { EssayClear, EssayDark } from 'src/app/models/essay.model';
 import { nanoid } from "nanoid";
+import { blurPicture } from 'src/app/utils/images';
+import { ListEssaysService } from 'src/app/services/list-essays.service';
 
 @Component({
   selector: 'app-create-essay',
@@ -9,10 +11,10 @@ import { nanoid } from "nanoid";
 })
 export class CreateEssayComponent implements OnInit {
 
-  essay: Essay = new Essay();
+  essay: EssayClear = new EssayClear();
   encryptionKey: string = nanoid(64);
 
-  constructor() { }
+  constructor(private listEssayService: ListEssaysService) { }
 
   ngOnInit(): void { }
 
@@ -25,7 +27,10 @@ export class CreateEssayComponent implements OnInit {
     reader.onloadend = async () => {
       // log to console
       // logs data:<type>;base64,wL2dvYWwgbW9yZ...
+
       this.essay.coverImage = reader.result as string;
+      // blur the image
+      this.essay.coverImageBlurred = await blurPicture(this.essay.coverImage, 40) as string;
       this.onChange();
     };
     reader.readAsDataURL(file);
@@ -37,8 +42,9 @@ export class CreateEssayComponent implements OnInit {
     return rows > 4 ? rows : 4;
   }
 
-  onPublish() {
-
+  onEncrypt() {
+    const essayDark: EssayDark = this.essay.encrypt(this.encryptionKey);
+    this.listEssayService.addEssay(essayDark);
   }
 
 }

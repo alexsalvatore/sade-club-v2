@@ -1,24 +1,73 @@
 import { AES } from 'crypto-js';
+import * as sha256 from 'crypto-js/sha256';
 
-export class Essay {
+
+export class EssayHeader {
 
     title: string = "";
     author: string = "";
     addressEth: string = "";
     priceUSD: number = 0;
+    coverImageBlurred: string = "";
+    cipherKeyHash: string = "";
+
+    constructor(data?: any) {
+        this.title = data?.title ? data?.title : "";
+        this.author = data?.author ? data?.author : "";
+        this.addressEth = data?.addressEth ? data?.addressEth : "";
+        this.priceUSD = data?.priceUSD ? data?.priceUSD : 0;
+        this.coverImageBlurred = data?.coverImageBlurred ? data?.coverImageBlurred : "";
+        this.cipherKeyHash = data?.cipherKeyHash ? data?.cipherKeyHash : "";
+    }
+}
+
+export class EssayClear extends EssayHeader {
 
     coverImage: string = "";
     text: string = "";
     images: string[] = [];
 
-    encrypt(key: string) {
-        /*this.coverImage = AES.encrypt(this.coverImage, key);
-        this.text = AES.encrypt(this.text, key);*/
+    constructor(data?: any) {
+        super(data);
+        this.coverImage = data?.coverImage ? data?.coverImage : "";
+        this.text = data?.text ? data?.text : "";
+        this.images = data?.images ? data?.images : [];
     }
 
-    decrypt(key: string) {
-        /*this.coverImage = AES.decrypt(this.coverImage, key);
-        this.text = AES.decrypt(this.text, key);*/
+
+    encrypt(key: string): EssayDark {
+
+        // We get the decrypted and encrypt it.
+        const scryptedBytes = AES.encrypt(JSON.stringify({
+            coverImage: this.coverImage,
+            text: this.text,
+            images: this.images,
+        }), key);
+
+        return new EssayDark({
+            ...this,
+            cipherKeyHash: sha256(key),
+            cypherData: scryptedBytes.toString()
+        });
+    }
+
+}
+
+export class EssayDark extends EssayHeader {
+
+    cypherData: string = "";
+
+    constructor(data?: any) {
+        super(data);
+        this.cypherData = data?.cypherData ? data.cypherData : "";
+    }
+
+    decrypt(key: string): EssayClear {
+
+        // Decrypt
+        const bytes = CryptoJS.AES.decrypt(this.cypherData, key);
+        const stringifiedJSON = bytes.toString(CryptoJS.enc.Utf8);
+        return new EssayClear({ ...this, ...JSON.parse(stringifiedJSON) });
     }
 
 }

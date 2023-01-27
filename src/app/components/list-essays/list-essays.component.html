@@ -1,0 +1,6 @@
+<div *ngFor="let essay of (listEssay$ | async)">
+    <h2>{{essay.title}}</h2>
+    <div><img height="200px" src="{{essay.coverImageBlurred}}"></div>
+    <div>Key hash: {{essay.cipherKeyHash}}</div>
+    <div>CypherData: {{essay.cypherData.toString()}}</div>
+</div>

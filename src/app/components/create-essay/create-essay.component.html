@@ -5,6 +5,7 @@
 
 <div class="p-2">
     <div *ngIf="essay.coverImage != '' "> <img [src]="essay.coverImage" height="220px" /></div>
+    <div *ngIf="essay.coverImageBlurred != '' "> <img [src]="essay.coverImageBlurred" height="220px" /></div>
     Upload a cover: <input type="file" accept="image/png, image/jpeg, image/webp" (change)="onCoverSelected($event)" />
 </div>
 
@@ -20,5 +21,5 @@
 </div>
 
 <div class="p-2">
-    <button (click)="onPublish()">Publish</button>
+    <button (click)="onEncrypt()">Encrypt the essay</button>
 </div>
