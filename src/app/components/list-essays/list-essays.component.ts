@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { EssayDark } from 'src/app/models/essay.model';
+import { DbService } from 'src/app/services/db.service';
 import { ListEssaysService } from 'src/app/services/list-essays.service';
 
 @Component({
@@ -12,12 +13,11 @@ export class ListEssaysComponent implements OnInit {
 
   public listEssay$: Observable<EssayDark[]>;
 
-  constructor(private listEssayService: ListEssaysService) {
-    this.listEssay$ = this.listEssayService.subToEssayList();
+  constructor(private db: DbService) {
+    this.listEssay$ = this.db.subToEssayList();
   }
 
   ngOnInit(): void {
-
   }
 
 }

@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { EssayClear, EssayDark } from 'src/app/models/essay.model';
-import { nanoid } from "nanoid";
 import { blurPicture } from 'src/app/utils/images';
 import { ListEssaysService } from 'src/app/services/list-essays.service';
 import { DbService } from 'src/app/services/db.service';
+import CypherKey from 'src/app/models/cypher-key.model';
 
 @Component({
   selector: 'app-create-essay',
@@ -12,8 +12,12 @@ import { DbService } from 'src/app/services/db.service';
 })
 export class CreateEssayComponent implements OnInit {
 
-  essay: EssayClear = new EssayClear();
-  encryptionKey: string = nanoid(64);
+  essay: EssayClear = new EssayClear({
+    title: "some title",
+    text: "some text",
+    coverImage: "https://pbs.twimg.com/media/Fn0AKaiWIAE7VMF?format=jpg&name=medium"
+  });
+  encryptionKey: CypherKey = new CypherKey();
 
   constructor(private listEssayService: ListEssaysService, private db: DbService) { }
 
@@ -44,10 +48,12 @@ export class CreateEssayComponent implements OnInit {
   }
 
   onEncrypt() {
-    const essayDark: EssayDark = this.essay.encrypt(this.encryptionKey);
+    const essayDark: EssayDark = this.essay.encrypt(this.encryptionKey.key);
+    // this.essay = essayDark.decrypt(this.encryptionKey.key);
+
     this.listEssayService.addEssay(essayDark);
     this.db.addEssayDark(essayDark);
-    this.db.getAllEssays();
+    this.db.addKey(this.encryptionKey);
     this.essay = new EssayClear();
   }
 

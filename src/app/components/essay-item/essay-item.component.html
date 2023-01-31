@@ -1,17 +1,17 @@
 <h2>{{essayDark.title}}</h2>
-<h2>Author: {{essayDark.author}}</h2>
 <div>Key hash: {{essayDark.cipherKeyHash}}</div>
 
 <div *ngIf="essayClear == null; else isDecrypted">
     <div><img height="200px" src="{{essayDark.coverImageBlurred}}"></div>
-
     <input [type]="'text'" class="form-control form-control-lg" [(ngModel)]="encryptionKey"
         placeholder="Key of encryption" />
     <button (click)="onDrecrypt($event)">Decrypt</button>
 </div>
 
 <ng-template #isDecrypted>
+    <div>Decypher key: <b>{{encryptionKey}}</b></div>
     <div><img height="200px" src="{{essayClear?.coverImage}}"></div>
     <div>
-        <{{essayClear?.text}} </div>
+        {{essayClear?.text}} </div>
+
 </ng-template>

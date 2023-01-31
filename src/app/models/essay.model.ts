@@ -46,7 +46,7 @@ export class EssayClear extends EssayHeader {
 
         return new EssayDark({
             ...this,
-            cipherKeyHash: sha256(key),
+            cipherKeyHash: sha256(key).toString(),
             cypherData: scryptedBytes.toString()
         });
     }
